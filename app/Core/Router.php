@@ -1,0 +1,62 @@
+<?php 
+
+namespace App\Core;
+
+
+class Router {
+
+    private $routes = [
+        'GET' => [],
+        'POST' => [],
+        'PUT' => [],
+        'DELETE' => []
+    ];
+
+    public function get($path, $handler) {
+        $this->routes['GET'][$path] = $handler;
+    }
+
+    public function post($path, $handler) {
+        $this->routes['POST'][$path] = $handler;
+    }
+
+    public function put($path, $handler) {
+        $this->routes['PUT'][$path] = $handler;
+    }
+
+    public function delete($path, $handler) {
+        $this->routes['DELETE'][$path] = $handler;
+    }
+
+    public function dispatch() { 
+
+        $method = $_SERVER['REQUEST_METHOD'];
+        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        
+        if (isset($this->routes[$method][$path])) {
+            $handler = $this->routes[$method][$path];
+            if (is_callable($handler)) {
+                return call_user_func($handler);
+            } elseif (is_string($handler)) {
+                list($controllerName, $actionName) = explode('@', $handler);
+                $controllerClass = "App\\Controllers\\$controllerName";
+                if (class_exists($controllerClass)) {
+                    $controller = new $controllerClass();
+                    if (method_exists($controller, $actionName)) {
+                        return $controller->$actionName();
+                    } else {
+                        http_response_code(500);
+                        echo "Method $actionName not found in controller $controllerName.";
+                    }
+                } else {
+                    http_response_code(500);
+                    echo "Controller class $controllerName not found.";
+                }
+            }
+        } else {
+            http_response_code(404);
+            echo "Route not found.";
+        }
+    }
+
+}
