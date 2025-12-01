@@ -7,6 +7,6 @@ class HomeController extends Controller {
 
     public function index() {
         $data = ['title' => 'Welcome to Pro-Key'];
-        return $this->view('home', 'index' ,$data);
+        return $this->view('home/index' ,$data);
     }
 }

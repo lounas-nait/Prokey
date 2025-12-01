@@ -36,6 +36,8 @@ class Router {
         $basePath = '/prokey/public'; 
         $path = preg_replace('#^' . preg_quote($basePath) . '#', '', $path); /* '/' */
         
+        var_dump($path);
+        var_dump($method);
         if (isset($this->routes[$method][$path])) {
             $handler = $this->routes[$method][$path];
             if (is_callable($handler)) {
@@ -61,5 +63,9 @@ class Router {
             echo "Route not found.";
         }
     }
+
+    public function getRoutes() {
+        return $this->routes;
+    }   
 
 }
