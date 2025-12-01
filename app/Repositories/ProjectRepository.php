@@ -7,9 +7,9 @@ class ProjectRepository
 {
     protected $model;
 
-    public function __construct(Project $model)
+    public function __construct()
     {
-        $this->model = $model;
+        $this->model = new Project();
     }
 
     public function getAll()

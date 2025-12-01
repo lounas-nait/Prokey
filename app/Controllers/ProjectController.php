@@ -9,15 +9,15 @@ class ProjectController extends Controller
 {
     protected $projectRepository;
 
-    public function __construct(ProjectRepository $projectRepository)
+    public function __construct()
     {
-        $this->projectRepository = $projectRepository;
+        $this->projectRepository = new ProjectRepository();
     }
 
     public function index()
     {
         $projects = $this->projectRepository->getAll();
-        $this->view('projects/index', ['projects' => $projects]);
+        $this->view('project/index', ['projects' => $projects]);
     }
 
 }

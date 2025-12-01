@@ -33,11 +33,11 @@ class Router {
         $method = $_SERVER['REQUEST_METHOD']; /* GET */
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); /* '/prokey/public/' */
 
-        $basePath = '/prokey/public'; 
+        $basePath = '/prokey/public/index.php'; 
         $path = preg_replace('#^' . preg_quote($basePath) . '#', '', $path); /* '/' */
         
-        var_dump($path);
-        var_dump($method);
+        // var_dump($path);
+        // var_dump($method);
         if (isset($this->routes[$method][$path])) {
             $handler = $this->routes[$method][$path];
             if (is_callable($handler)) {
