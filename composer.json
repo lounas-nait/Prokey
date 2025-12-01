@@ -1,0 +1,19 @@
+{
+    "name": "elie/prokey",
+    "description": "Application MVC de gestion de mots de passe par projet.",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "codewithelie",
+            "email": "me@elyh.fr"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
