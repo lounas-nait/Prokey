@@ -1,0 +1,1 @@
+<h1>Bienvenue sur <?php echo $title ?></h1>
