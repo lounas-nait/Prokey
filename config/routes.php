@@ -9,9 +9,9 @@ $router->get('/projects', 'ProjectController@index');
 $router->get('/projects/create', 'ProjectController@create');
 $router->post('/projects', 'ProjectController@store');
 
-$router->get('/projects/show', 'ProjectController@show'); /* @TODO : add dynamic route {id} */
-$router->get('/projects/edit', 'ProjectController@edit');
-$router->post('/projects/update', 'ProjectController@update');
-$router->post('/projects/delete', 'ProjectController@destroy');
+$router->get('/projects/{id}/show', 'ProjectController@show');
+$router->get('/projects/{id}/edit', 'ProjectController@edit');
+$router->post('/projects/{id}/update', 'ProjectController@update');
+$router->post('/projects/{id}/delete', 'ProjectController@destroy');
 
 

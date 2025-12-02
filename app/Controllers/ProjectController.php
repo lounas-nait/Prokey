@@ -32,10 +32,8 @@ class ProjectController extends Controller
         exit();
     }
 
-    public function show()
+    public function show($id)
     {
-        $id = $_GET['id'];
-
         $project = $this->projectRepository->getById($id);
 
         if(!$project) {
@@ -48,10 +46,8 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function edit()
+    public function edit($id)
     {
-        $id = $_GET['id'];
-
         $project = $this->projectRepository->getById($id);
 
         if(!$project) {
@@ -64,18 +60,16 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function update()
+    public function update($id)
     {
-        $id = $_GET['id'];
         $this->projectRepository->update($id, $_POST);
 
-        header('Location: ' . url('/projects/show?id=' . $id));
+        header('Location: ' . url('/projects/' . $id . '/show'));
         exit();
     }
 
-    public function destroy()
+    public function destroy($id)
     {
-        $id = $_GET['id'];
         $this->projectRepository->delete($id);
 
         header('Location: ' . url('/projects'));

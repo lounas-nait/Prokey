@@ -1,5 +1,5 @@
 <h2>Modifier le projet : <?php htmlspecialchars($title) ?></h2>
-<form method="POST" action="<?php echo url('/projects/update?id=' . $project['id']) ?>">
+<form method="POST" action="<?php echo url('/projects/' . $project['id'] . '/update') ?>">
     <label for="name">Nom du projet :</label>
     <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($project['name']) ?>" required>
 

@@ -19,39 +19,36 @@ class Router {
     }
 
     public function dispatch() { 
-
+        
         $method = $_SERVER['REQUEST_METHOD']; /* GET */
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); /* '/prokey/public/' */
 
         $basePath = '/prokey/public'; 
         $path = preg_replace('#^' . preg_quote($basePath) . '#', '', $path); /* '/' */
-        
-        // var_dump($path);
-        // var_dump($method);
-        if (isset($this->routes[$method][$path])) {
-            $handler = $this->routes[$method][$path];
-            if (is_callable($handler)) {
-                return call_user_func($handler);
-            } elseif (is_string($handler)) {
-                list($controllerName, $actionName) = explode('@', $handler); 
-                $controllerClass = "App\\Controllers\\$controllerName"; /* HomeController */
+
+        // GET /projects/123/show
+
+        foreach ($this->routes[$method] as $route => $handler) {
+
+            $routePattern = preg_replace('#\{[a-zA-Z_][a-zA-Z0-9_]*\}#', '([a-zA-Z0-9_-]+)', $route);
+            $routePattern = '#^' . $routePattern . '$#';
+
+            if (preg_match($routePattern, $path, $matches)) {
+                array_shift($matches); 
+
+                list($controllerName, $methodName) = explode('@', $handler);
+                $controllerClass = 'App\\Controllers\\' . $controllerName;
                 if (class_exists($controllerClass)) {
                     $controller = new $controllerClass();
-                    if (method_exists($controller, $actionName)) {
-                        return $controller->$actionName();
-                    } else {
-                        http_response_code(500);
-                        echo "Method $actionName not found in controller $controllerName.";
+                    if (method_exists($controller, $methodName)) {
+                        return call_user_func_array([$controller, $methodName], $matches);
                     }
-                } else {
-                    http_response_code(500);
-                    echo "Controller class $controllerName not found.";
                 }
             }
-        } else {
-            http_response_code(404);
-            echo "Route not found.";
         }
+
+        http_response_code(404);
+        echo "404 Not Found";
     }
 
     public function getRoutes() {

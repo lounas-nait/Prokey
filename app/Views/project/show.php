@@ -3,9 +3,9 @@
 <p><?php echo htmlspecialchars($project['description']) ?></p>
 <p>Created at: <?php echo htmlspecialchars($project['created_at']) ?></p>
 
-<a href="<?php echo url('/projects/edit?id=' . $project['id']) ?>">Modifier le projet</a>
+<a href="<?php echo url('/projects/' . $project['id'] . '/edit') ?>">Modifier le projet</a>
 
-<form action="<?php echo url('/projects/delete?id=' . $project['id']) ?>" method="POST" style="display:inline;">
+<form action="<?php echo url('/projects/' . $project['id'] . '/delete') ?>" method="POST" style="display:inline;">
     <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')">Supprimer le projet</button>
 </form>
 
