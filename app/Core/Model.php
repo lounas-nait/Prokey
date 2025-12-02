@@ -55,14 +55,14 @@ class Model
         return $this->execute($sql, [$id]);
     }
 
-    protected function query($sql, $params = [])
+    public function query($sql, $params = [])
     {
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    protected function execute(string $sql, array $params)
+    public function execute(string $sql, array $params)
     {
         $stmt = $this->db->prepare($sql);
         return $stmt->execute($params);

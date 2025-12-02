@@ -27,3 +27,24 @@ $router->post('/projects/{id}/update', 'ProjectController@update');
 $router->post('/projects/{id}/delete', 'ProjectController@destroy');
 
 
+/* Password types Routes */
+/* index */
+$router->get('/password-types', 'PasswordTypeController@index');
+
+/* create form */
+$router->get('/password-types/create', 'PasswordTypeController@create');
+
+/* store */
+$router->post('/password-types', 'PasswordTypeController@store');
+
+/* show */
+$router->get('/password-types/{id}/show', 'PasswordTypeController@show');
+
+/* edit form */
+$router->get('/password-types/{id}/edit', 'PasswordTypeController@edit');
+
+/* update */
+$router->post('/password-types/{id}/update', 'PasswordTypeController@update');
+
+/* delete */
+$router->post('/password-types/{id}/delete', 'PasswordTypeController@destroy');

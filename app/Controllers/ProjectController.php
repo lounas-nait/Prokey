@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Repositories\ProjectRepository;
+use App\Repositories\PasswordRepository;
 
 class ProjectController extends Controller
 {
@@ -40,9 +41,13 @@ class ProjectController extends Controller
             return $this->view('errors/404', ['title' => 'Projet non trouvé']);
         }
 
+        $passwordRepository = new PasswordRepository();
+        $passwords = $passwordRepository->allByProjectId($id);
+
         $this->view('project/show', [
             'title'=> $project['name'], 
-            'project' => $project
+            'project' => $project,
+            'passwords' => $passwords,
         ]);
     }
 
