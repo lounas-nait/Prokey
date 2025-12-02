@@ -33,7 +33,7 @@ class Router {
         $method = $_SERVER['REQUEST_METHOD']; /* GET */
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); /* '/prokey/public/' */
 
-        $basePath = '/prokey/public/index.php'; 
+        $basePath = '/prokey/public'; 
         $path = preg_replace('#^' . preg_quote($basePath) . '#', '', $path); /* '/' */
         
         // var_dump($path);

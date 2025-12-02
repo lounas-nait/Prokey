@@ -9,7 +9,7 @@ class Database
 {
     private static $instance = null;
 
-    public static function getConnexion()
+    private static function getConnexion()
     {
         if(self::$instance === null) {
 
@@ -22,7 +22,7 @@ class Database
                 $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
 
                 self::$instance = new PDO($dsn, $user, $pass);
-                self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             } catch (PDOException $e) {
                 die("Database connection failed: " . $e->getMessage());
             }
