@@ -8,8 +8,6 @@ class Router {
     private $routes = [
         'GET' => [],
         'POST' => [],
-        'PUT' => [],
-        'DELETE' => []
     ];
 
     public function get($path, $handler) {
@@ -18,14 +16,6 @@ class Router {
 
     public function post($path, $handler) {
         $this->routes['POST'][$path] = $handler;
-    }
-
-    public function put($path, $handler) {
-        $this->routes['PUT'][$path] = $handler;
-    }
-
-    public function delete($path, $handler) {
-        $this->routes['DELETE'][$path] = $handler;
     }
 
     public function dispatch() { 

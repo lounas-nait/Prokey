@@ -29,4 +29,37 @@ class Model
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }   
+
+    public function create(array $data)
+    {
+        $fields = implode(", ", array_keys($data));
+        $placeholders = implode(", ", array_fill(0, count($data), "?"));
+
+        $sql = "INSERT INTO {$this->table} ({$fields}) VALUES ({$placeholders})";
+        $this->execute($sql, array_values($data));
+        return $this->db->lastInsertId();
+    }
+
+    public function update($id, array $data)
+    {
+        $setClause = implode(", ", array_map(fn($key) => "$key = ?", array_keys($data)));
+        $sql = "UPDATE {$this->table} SET {$setClause} WHERE id = ?";
+        $params = array_values($data);
+        $params[] = $id;
+        return $this->execute($sql, $params);
+    }
+
+    protected function query($sql, $params = [])
+    {
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    protected function execute(string $sql, array $params)
+    {
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute($params);
+    }
+
 }

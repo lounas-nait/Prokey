@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 use App\Models\Project;
+use App\Core\Database;
 
 class ProjectRepository
 {
@@ -22,7 +23,17 @@ class ProjectRepository
         return $this->model->getById($id);
     }
 
-   
+    public function create(array $data)
+    {
+        return $this->model->create($data);
+    }
+
+    public function update($id, array $data)
+    {
+        return $this->model->update($id, $data);
+    }   
+    
+
 }
 
 

@@ -1,5 +1,6 @@
 <h2>Liste des projets</h2>
 
+<a href="<?php echo url('/projects/create') ?>">Créer un projet</a>
 
 <table>
     <tr>
