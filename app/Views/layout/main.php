@@ -6,6 +6,7 @@
     <title>Prokey</title>
 </head>
 <body>
+    <?php include __DIR__ . '/../partials/notifications.php'; ?>
     <header>
         <h1>Prokey Application</h1>
     </header>

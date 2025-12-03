@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Notification;
 use App\Repositories\PasswordTypeFieldRepository;
 
 class PasswordTypeFieldController extends Controller
@@ -44,7 +45,12 @@ class PasswordTypeFieldController extends Controller
             'field_type' => $_POST['field_type']
         ];
 
-        $this->repo->create($data);
+        $last_id = $this->repo->create($data);
+
+        if(!$last_id) {
+            Notification::add('error', 'Erreur lors de l\'ajout du champ.');
+        }
+        Notification::add('sucess', 'Champ ajouté avec succès.');
 
         header('Location: ' . url('/password-types/' . $password_type_id . '/fields'));
         exit();

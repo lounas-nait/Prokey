@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Core;
+use App\Core\Notification;
 class View {
 
     public static function render(string $viewName ,array $data = []) {
@@ -17,6 +18,8 @@ class View {
         $content = ob_get_clean();
 
         $layoutPath = __DIR__ . '/../Views/layout/main.php';
+
+        $notifications = Notification::get();  
 
         ob_start();
         require $layoutPath;

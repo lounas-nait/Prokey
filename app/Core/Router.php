@@ -20,13 +20,11 @@ class Router {
 
     public function dispatch() { 
         
-        $method = $_SERVER['REQUEST_METHOD']; /* GET */
-        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); /* '/prokey/public/' */
+        $method = $_SERVER['REQUEST_METHOD'];
+        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         $basePath = '/prokey/public'; 
-        $path = preg_replace('#^' . preg_quote($basePath) . '#', '', $path); /* '/' */
-
-        // GET /projects/123/show
+        $path = preg_replace('#^' . preg_quote($basePath) . '#', '', $path);
 
         foreach ($this->routes[$method] as $route => $handler) {
 
