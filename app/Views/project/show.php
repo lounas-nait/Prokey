@@ -4,6 +4,7 @@
 <p>Created at: <?php echo htmlspecialchars($project['created_at']) ?></p>
 
 <h3>Mot de passe du projet</h3>
+<a href="<?php echo url('/projects/' . $project_id . '/passwords/create') ?>">Ajouter un nouveau mot de passe</a>
 <?php if (empty($passwords)): ?>
     <p>Aucun mot de passe associé à ce projet.</p>
 <?php else: ?>
