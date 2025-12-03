@@ -5,10 +5,11 @@ namespace App\Core;
 
 class Router {
 
-    private $routes = [
+    private array $routes = [
         'GET' => [],
         'POST' => [],
     ];
+    private array $protectedRoutes = [];
 
     public function get($path, $handler) {
         $this->routes['GET'][$path] = $handler;
@@ -25,6 +26,8 @@ class Router {
 
         $basePath = '/prokey/public'; 
         $path = preg_replace('#^' . preg_quote($basePath) . '#', '', $path);
+
+        $this->checkProtection($path);
 
         foreach ($this->routes[$method] as $route => $handler) {
 
@@ -51,6 +54,21 @@ class Router {
 
     public function getRoutes() {
         return $this->routes;
+    }   
+
+    public function protect($route) {
+        $this->protectedRoutes[] = $route;
+    }  
+    
+    private function checkProtection($route) {
+        foreach ($this->protectedRoutes as $protectedRoute) {
+            $pattern = str_replace('*', '.*', $protectedRoute);
+            
+            if (preg_match('#^' . $pattern . '$#', $route)) {
+                Auth::check();
+            }
+        }
+        return false;
     }   
 
 }

@@ -7,9 +7,7 @@
 </head>
 <body>
     <?php include __DIR__ . '/../partials/notifications.php'; ?>
-    <header>
-        <h1>Prokey Application</h1>
-    </header>
+    <?php include __DIR__ . '/../partials/header.php'; ?>
     <main>
         <?php echo $content; ?>
     </main>

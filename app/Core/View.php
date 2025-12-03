@@ -2,6 +2,7 @@
 
 namespace App\Core;
 use App\Core\Notification;
+use App\Core\Auth;
 class View {
 
     public static function render(string $viewName ,array $data = []) {
@@ -19,6 +20,7 @@ class View {
 
         $layoutPath = __DIR__ . '/../Views/layout/main.php';
 
+        $user = Auth::user();
         $notifications = Notification::get();  
 
         ob_start();

@@ -1,5 +1,10 @@
 <?php 
 
+$router->protect('/projects');
+$router->protect('/projects/*');
+$router->protect('/password-types');
+$router->protect('/password-types/*');
+
 // Define routes
 /* Home Page */
 $router->get('/', 'HomeController@index');
@@ -75,3 +80,12 @@ $router->get('/password-types/{password_type_id}/fields/{id}/edit',  'PasswordTy
 $router->post('/password-types/{password_type_id}/fields/{id}/update',  'PasswordTypeFieldController@update');
 /* Delete field */
 $router->post('/password-types/{password_type_id}/fields/{id}/delete',  'PasswordTypeFieldController@destroy');
+
+
+/* Authentication Routes */
+/* Login form */
+$router->get('/login', 'AuthController@login');
+/* Handle login */
+$router->post('/login', 'AuthController@log');
+/* Logout */
+$router->get('/logout', 'AuthController@logout');
