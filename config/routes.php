@@ -4,6 +4,7 @@ $router->protect('/projects');
 $router->protect('/projects/*');
 $router->protect('/password-types');
 $router->protect('/password-types/*');
+$router->protect('/me');
 
 // Define routes
 /* Home Page */
@@ -89,3 +90,5 @@ $router->get('/login', 'AuthController@login');
 $router->post('/login', 'AuthController@log');
 /* Logout */
 $router->get('/logout', 'AuthController@logout');
+/* User profile */
+$router->get('/me', 'AuthController@me');

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Repositories\UserRepository;
 use App\Core\Controller;
 use App\Core\Notification;
+use App\Core\Auth;
 
 class AuthController extends Controller
 {
@@ -57,5 +58,14 @@ class AuthController extends Controller
             'email' => $user['email'],
             'name' => $user['name']
         ];
+    }
+
+    public function me()
+    {
+        $user = Auth::user();
+        $this->view('auth/me', [
+            'title' => 'My Profile',
+            'user' => $user
+        ]);
     }
 }
