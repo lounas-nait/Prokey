@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Notification;
+use App\Core\Validator;
 use App\Repositories\PasswordTypeRepository;
 
 class PasswordTypeController extends Controller
@@ -26,7 +28,18 @@ class PasswordTypeController extends Controller
     }
 
     public function store()
-    {
+    {   
+        $validate = Validator::make($_POST, [
+            'label' => 'required|string|max:255',
+            'color' => 'string|max:7'
+        ]);
+
+        if (!$validated) {
+            Notification::add('error', 'Données invalides. Veuillez vérifier les informations fournies.');
+            header('Location: ' . url('/password-types'));
+            exit();
+        }
+
         $this->passwordTypesRepository->create($_POST);
         header('Location: ' . url('/password-types'));
         exit();
@@ -51,7 +64,18 @@ class PasswordTypeController extends Controller
     }
 
     public function update($id)
-    {
+    {   
+        $validate = Validator::make($_POST, [
+            'label' => 'required|string|max:255',
+            'color' => 'string|max:7'
+        ]);
+
+        if (!$validated) {
+            Notification::add('error', 'Données invalides. Veuillez vérifier les informations fournies.');
+            header('Location: ' . url('/password-types/' . $id . '/show'));
+            exit();
+        }
+
         $this->passwordTypesRepository->update($id, $_POST);
 
         header('Location: ' . url('/password-types/' . $id . '/show'));

@@ -23,8 +23,19 @@ class AuthController extends Controller
 
     public function log()
     {   
-        $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? '';
+        $validate = Validator::make($_POST, [
+            'email' => 'required|email|max:255',
+            'password' => 'required|string|max:255',
+        ]);
+
+        if (!$validated) {
+            Notification::add('error', 'Données invalides. Veuillez vérifier les informations fournies.');
+            header('Location: ' . url('/login'));
+            exit();
+        }
+
+        $email = $_POST['email'];
+        $password = $_POST['password'];
 
         $user = $this->userRepository->findByEmail($email);
 

@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Notification;
+use App\Core\Validator;
 use App\Repositories\PasswordRepository;
 use App\Repositories\PasswordTypeRepository;
 use App\Repositories\PasswordTypeFieldRepository;
@@ -41,7 +43,7 @@ class PasswordController extends Controller
 
     public function store()
     {   
-        $extra = $_POST['extra'] ?? []; 
+        $extra = $_POST['extra'];
 
         $data = [
             'project_id' => $_POST['project_id'],
@@ -49,6 +51,19 @@ class PasswordController extends Controller
             'label' => $_POST['label'],
             'extra' => json_encode($extra),
         ];
+
+        $validate = Validator::make($_POST, [
+            'project_id' => 'required|number',
+            'type_id' => 'reequired|number',
+            'label' => 'required|string|max:255',
+            'extra' => 'required|string'
+        ]);
+
+        if (!$validated) {
+            Notification::add('error', 'Données invalides. Veuillez vérifier les informations fournies.');
+            header('Location: ' . url('/projects/' . $_POST['project_id'] . '/show'));
+            exit();
+        }
 
         $this->passwordRepository->create($data);
 
@@ -98,6 +113,18 @@ class PasswordController extends Controller
             'label' => $_POST['label'],
             'extra' => json_encode($extra),
         ];
+
+        $validate = Validator::make($_POST, [
+            'type_id' => 'reequired|number',
+            'label' => 'required|string|max:255',
+            'extra' => 'required|string'
+        ]);
+
+        if (!$validated) {
+            Notification::add('error', 'Données invalides. Veuillez vérifier les informations fournies.');
+            header('Location: ' . url('/projects/' . $project_id . '/show'));
+            exit();
+        }
 
         $this->passwordRepository->update($id, $data);
 

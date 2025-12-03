@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Notification;
+use App\Core\Validator;
 use App\Repositories\PasswordTypeFieldRepository;
 
 class PasswordTypeFieldController extends Controller
@@ -37,13 +38,27 @@ class PasswordTypeFieldController extends Controller
         ]);
     }
     public function store($password_type_id)
-    {
+    {   
+        
+        
         $data = [
             'type_id' => $password_type_id,
             'field_name' => $_POST['field_name'],
             'field_label' => $_POST['field_label'],
             'field_type' => $_POST['field_type']
         ];
+
+        $validate = Validator::make($data, [
+            'field_name' => 'required|slug|string|max:255',
+            'field_label' => 'required|string|max:255',
+            'field_type' => 'required|string|in:text,textarea,number,password,date,email'
+        ]);
+
+        if (!$validated) {
+            Notification::add('error', 'Données invalides. Veuillez vérifier les informations fournies.');
+            header('Location: ' . url('/password-types/' . $password_type_id . '/fields/create'));
+            exit();
+        }
 
         $last_id = $this->repo->create($data);
 

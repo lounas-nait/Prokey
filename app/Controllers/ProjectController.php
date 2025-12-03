@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Notification;
+use App\Core\Validator;
 use App\Repositories\ProjectRepository;
 use App\Repositories\PasswordRepository;
 
@@ -27,7 +29,18 @@ class ProjectController extends Controller
     }
 
     public function store()
-    {
+    {   
+        $validate = Validator::make($_POST, [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:1000'
+        ]);
+
+        if (!$validated) {
+            Notification::add('error', 'Données invalides. Veuillez vérifier les informations fournies.');
+            header('Location: ' . url('/projects'));
+            exit();
+        }
+
         $this->projectRepository->create($_POST);
         header('Location: ' . url('/projects'));
         exit();
@@ -68,6 +81,17 @@ class ProjectController extends Controller
 
     public function update($id)
     {
+        $validate = Validator::make($_POST, [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:1000'
+        ]);
+
+        if (!$validated) {
+            Notification::add('error', 'Données invalides. Veuillez vérifier les informations fournies.');
+            header('Location: ' . url('/projects/' . $id . '/show'));
+            exit();
+        }
+
         $this->projectRepository->update($id, $_POST);
 
         header('Location: ' . url('/projects/' . $id . '/show'));
