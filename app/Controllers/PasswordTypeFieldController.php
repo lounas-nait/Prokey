@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Repositories\PasswordTypeFieldRepository;
 
 class PasswordTypeFieldController extends Controller
@@ -11,6 +12,81 @@ class PasswordTypeFieldController extends Controller
     public function __construct()
     {
         $this->repo = new PasswordTypeFieldRepository();
+    }
+
+    public function index($password_type_id)
+    {
+        $password_type = new \App\Repositories\PasswordTypeRepository();
+        $type = $password_type->getById($password_type_id);
+
+        $fields = $this->repo->getFieldsByType($password_type_id);
+
+        return $this->view('password_type_field/index', [
+            'title' => 'Liste des champs de type de mot de passe : ' . $type['label'],
+            'fields' => $fields,
+            'password_type_id' => $password_type_id
+        ]);
+    }
+
+    public function create($password_type_id)
+    {
+        return $this->view('password_type_field/create', [
+            'title' => 'Ajouter un champ au type de mot de passe',
+            'password_type_id' => $password_type_id
+        ]);
+    }
+    public function store($password_type_id)
+    {
+        $data = [
+            'type_id' => $password_type_id,
+            'field_name' => $_POST['field_name'],
+            'field_label' => $_POST['field_label'],
+            'field_type' => $_POST['field_type']
+        ];
+
+        $this->repo->create($data);
+
+        header('Location: ' . url('/password-types/' . $password_type_id . '/fields'));
+        exit();
+    }
+
+    function edit($password_type_id, $id)
+    {
+        $field = $this->repo->getById($id);
+        $password_type = new \App\Repositories\PasswordTypeRepository();
+        $type = $password_type->getById($password_type_id);
+
+        if (!$field) {
+            return $this->view('errors/404', ['title' => 'Champ non trouvé']);
+        }
+
+        return $this->view('password_type_field/edit', [
+            'title' => 'Éditer le champ : ' . $field['field_label'] . ' du type de mot de passe : ' . $type['label'],
+            'field' => $field,
+            'password_type_id' => $password_type_id
+        ]);
+    }
+
+    function update($password_type_id, $id)
+    {
+        $data = [
+            'field_name' => $_POST['field_name'],
+            'field_label' => $_POST['field_label'],
+            'field_type' => $_POST['field_type']
+        ];
+
+        $this->repo->update($id, $data);
+
+        header('Location: ' . url('/password-types/' . $password_type_id . '/fields'));
+        exit();
+    }
+
+    function destroy($password_type_id, $id)
+    {
+        $this->repo->delete($id);
+
+        header('Location: ' . url('/password-types/' . $password_type_id . '/fields'));
+        exit();
     }
 
 }
