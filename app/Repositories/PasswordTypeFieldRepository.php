@@ -4,38 +4,13 @@ namespace App\Repositories;
 use App\Models\PasswordTypeField;
 use App\Core\Database;
 
-class PasswordTypeFieldRepository
+class PasswordTypeFieldRepository extends BaseRepository
 {
     protected $model;
 
     public function __construct()
     {
-        $this->model = new PasswordTypeField();
-    }
-
-    public function getAll()
-    {
-        return $this->model->getAll();
-    }
-
-    public function getById($id)
-    {
-        return $this->model->getById($id);
-    }
-
-    public function create(array $data)
-    {
-        return $this->model->create($data);
-    }
-
-    public function update($id, array $data)
-    {
-        return $this->model->update($id, $data);
-    }   
-
-    public function delete($id)
-    {
-        return $this->model->delete($id);
+        parent::__construct(new PasswordTypeField());
     }
 
     public function getFieldsByType($typeId) {
