@@ -1,0 +1,54 @@
+{% extends "layout/main.twig" %}
+
+{% block content %}
+  <section class="p-8">
+    <h2 class="text-3xl font-bold mb-6 text-gray-800">{{ title }}</h2>
+
+    <a href="{{ url('/password-types/' ~ password_type_id ~ '/fields/create') }}" 
+       class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+      Ajouter un champ
+    </a>
+
+    <table class="w-full mt-6 border-collapse bg-white rounded-lg shadow">
+      <thead>
+        <tr class="bg-gray-100 text-left">
+          <th class="py-3 px-4">ID</th>
+          <th class="py-3 px-4">Nom du champ</th>
+          <th class="py-3 px-4">Label</th>
+          <th class="py-3 px-4">Type</th>
+          <th class="py-3 px-4">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for field in fields %}
+          <tr class="border-t hover:bg-gray-50">
+            <td class="py-2 px-4">{{ field.id }}</td>
+            <td class="py-2 px-4 font-semibold">{{ field.field_name }}</td>
+            <td class="py-2 px-4">{{ field.field_label }}</td>
+            <td class="py-2 px-4">{{ field.field_type }}</td>
+            <td class="py-2 px-4 space-x-3">
+              <a href="{{ url('/password-types/' ~ password_type_id ~ '/fields/' ~ field.id ~ '/edit') }}" 
+                 class="text-yellow-600 hover:underline font-medium">Éditer</a>
+
+              <form action="{{ url('/password-types/' ~ password_type_id ~ '/fields/' ~ field.id ~ '/delete') }}" 
+                    method="POST" 
+                    style="display:inline;">
+                <button type="submit" 
+                        class="text-red-600 hover:underline font-medium"
+                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce champ ?');">
+                  Supprimer
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="5" class="text-center text-gray-400 py-6">
+              Aucun champ trouvé pour ce type de mot de passe.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

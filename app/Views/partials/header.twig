@@ -1,0 +1,15 @@
+<header>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="" class="navbar-brand">ProKey</a>
+        </div>
+        <div class="navbar-right">
+            {% if auth_user %}
+                <span class="navbar-user">Hello, {{ auth_user.name }}</span>
+                <a href="{{ url('/logout') }}" class="navbar-link">Logout</a>
+            {% else %}
+                <a href="{{ url('/login') }}" class="navbar-link">Login</a>
+            {% endif %}
+        </div>
+    </nav>  
+</header>

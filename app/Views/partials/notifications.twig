@@ -1,0 +1,6 @@
+
+{% for n in notifications %}
+    <div class="alert alert-{{ n.type }}">
+        {{ n.message }}
+    </div>
+{% endfor %}

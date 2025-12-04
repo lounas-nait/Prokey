@@ -6,10 +6,11 @@
     <title>Prokey</title>
 </head>
 <body>
-    <?php include __DIR__ . '/../partials/notifications.php'; ?>
-    <?php include __DIR__ . '/../partials/header.php'; ?>
+   {% include 'partials/notifications.twig' %} 
+   {% include 'partials/header.twig' %} 
+
     <main>
-        <?php echo $content; ?>
+        {% block content %}{% endblock %}
     </main>
     <footer>
         <p>&copy; 2024 Prokey</p>

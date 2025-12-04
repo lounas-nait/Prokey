@@ -30,7 +30,7 @@ class ProjectController extends Controller
 
     public function store()
     {   
-        $validate = Validator::make($_POST, [
+        $validated = Validator::make($_POST, [
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000'
         ]);
@@ -81,7 +81,7 @@ class ProjectController extends Controller
 
     public function update($id)
     {
-        $validate = Validator::make($_POST, [
+        $validated = Validator::make($_POST, [
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000'
         ]);

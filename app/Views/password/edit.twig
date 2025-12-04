@@ -1,0 +1,61 @@
+{% extends "layout/main.twig" %}
+
+{% block content %}
+<section class="p-8 max-w-3xl mx-auto">
+  <h2 class="text-3xl font-bold mb-6 text-gray-800">
+    Modifier le mot de passe : {{ password.label }}
+  </h2>
+
+  <form method="POST" 
+        action="{{ url('/projects/' ~ project_id ~ '/passwords/' ~ password.id ~ '/update') }}"
+        class="bg-white p-6 rounded-lg shadow-md space-y-5">
+
+    <!-- Libellé -->
+    <div>
+      <label for="label" class="block mb-2 font-semibold text-gray-700">Libellé :</label>
+      <input type="text" id="label" name="label" value="{{ password.label }}" required
+             class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-300">
+    </div>
+
+    <!-- Type de mot de passe -->
+    <div>
+      <label for="password_type_id" class="block mb-2 font-semibold text-gray-700">Type de mot de passe :</label>
+      <select id="password_type_id" name="password_type_id" required
+              class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-300">
+        {% for type in password_types %}
+          <option value="{{ type.id }}" {% if type.id == password.type_id %}selected{% endif %}>
+            {{ type.label }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Champs dynamiques -->
+    {% for field in fields %}
+      <div>
+        <label class="block mb-2 font-semibold text-gray-700">
+          {{ field.field_label }} :
+        </label>
+
+        {% if field.field_type == 'textarea' %}
+          <textarea name="extra[{{ field.field_name }}]" 
+                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-300"
+                    rows="3">{{ extra[field.field_name]|default('') }}</textarea>
+        {% else %}
+          <input type="{{ field.field_type }}" 
+                 name="extra[{{ field.field_name }}]" 
+                 value="{{ extra[field.field_name]|default('') }}"
+                 class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-300">
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="pt-4">
+      <button type="submit"
+              class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+        Mettre à jour le mot de passe
+      </button>
+    </div>
+  </form>
+</section>
+{% endblock %}
