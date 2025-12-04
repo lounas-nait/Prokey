@@ -119,7 +119,7 @@ class PasswordController extends Controller
             'extra' => json_encode($extra),
         ];
 
-        $validate = Validator::make($_POST, [
+        $validated = Validator::make($_POST, [
             'type_id' => 'reequired|number',
             'label' => 'required|string|max:255',
             'extra' => 'required|string'

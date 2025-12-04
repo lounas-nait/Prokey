@@ -6,6 +6,7 @@ use App\Repositories\UserRepository;
 use App\Core\Controller;
 use App\Core\Notification;
 use App\Core\Auth;
+use App\Core\Validator;
 
 class AuthController extends Controller
 {
@@ -23,7 +24,7 @@ class AuthController extends Controller
 
     public function log()
     {   
-        $validate = Validator::make($_POST, [
+        $validated = Validator::make($_POST, [
             'email' => 'required|email|max:255',
             'password' => 'required|string|max:255',
         ]);

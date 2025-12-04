@@ -29,7 +29,7 @@ class PasswordTypeController extends Controller
 
     public function store()
     {   
-        $validate = Validator::make($_POST, [
+        $validated = Validator::make($_POST, [
             'label' => 'required|string|max:255',
             'color' => 'string|max:7'
         ]);
@@ -65,7 +65,7 @@ class PasswordTypeController extends Controller
 
     public function update($id)
     {   
-        $validate = Validator::make($_POST, [
+        $validated = Validator::make($_POST, [
             'label' => 'required|string|max:255',
             'color' => 'string|max:7'
         ]);

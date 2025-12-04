@@ -48,7 +48,7 @@ class PasswordTypeFieldController extends Controller
             'field_type' => $_POST['field_type']
         ];
 
-        $validate = Validator::make($data, [
+        $validated = Validator::make($data, [
             'field_name' => 'required|slug|string|max:255',
             'field_label' => 'required|string|max:255',
             'field_type' => 'required|string|in:text,textarea,number,password,date,email'
