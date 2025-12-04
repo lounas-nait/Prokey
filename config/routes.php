@@ -92,3 +92,6 @@ $router->post('/login', 'AuthController@log');
 $router->get('/logout', 'AuthController@logout');
 /* User profile */
 $router->get('/me', 'AuthController@me');
+
+/* Search routes */
+$router->get('/search', 'SearchController@index');
