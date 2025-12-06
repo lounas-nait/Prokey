@@ -17,11 +17,14 @@ class ProjectController extends Controller
         $this->projectRepository = new ProjectRepository();
     }
 
-    public function index()
-    {
-        $projects = $this->projectRepository->getAll();
-        $this->view('project/index', ['projects' => $projects]);
-    }
+   public function index()
+{
+   
+    $projects = $this->projectRepository->getAllByUser($_SESSION['user']['id']);
+
+    $this->view('project/index', ['projects' => $projects]);
+}
+
 
     public function create()
     {   
@@ -41,7 +44,10 @@ class ProjectController extends Controller
             exit();
         }
 
-        $this->projectRepository->create($_POST);
+        $data = $_POST;
+$data['user_id'] = $_SESSION['user']['id'];
+$this->projectRepository->create($data);
+
         header('Location: ' . url('/projects'));
         exit();
     }
