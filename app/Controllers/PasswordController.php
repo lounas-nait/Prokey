@@ -9,6 +9,7 @@ use App\Repositories\PasswordRepository;
 use App\Repositories\PasswordTypeRepository;
 use App\Repositories\PasswordTypeFieldRepository;
 use App\Services\EncryptionService;
+use App\Services\PasswordStrengthService;
 
 class PasswordController extends Controller
 {
@@ -46,7 +47,6 @@ class PasswordController extends Controller
 
     public function store()
     {
-
         $validated = Validator::make($_POST, [
             'project_id' => 'required|number',
             'password_type_id' => 'required|number',
@@ -62,14 +62,23 @@ class PasswordController extends Controller
 
         $extra = $_POST['extra'];
         $extraJSON = json_encode($extra);
-
         $extraEncrypted = EncryptionService::encrypt($extraJSON);
+
+        // Calcul du niveau du mot de passe
+        $passwordValue = $extra['password'] ?? $extra['motdepasse'] ?? $extra['mdp'] ?? null;
+        $level = null;
+        if ($passwordValue) {
+            $service = new PasswordStrengthService();
+            $scoreData = $service->calculateScore($passwordValue);
+            $level = $scoreData['level'];
+        }
 
         $data = [
             'project_id' => $_POST['project_id'],
             'type_id' => $_POST['password_type_id'],
             'label' => $_POST['label'],
             'extra' => $extraEncrypted,
+            'level' => $level,
         ];
 
         $passwordId = $this->passwordRepository->create($data);
@@ -132,9 +141,17 @@ class PasswordController extends Controller
             return;
         }
 
-        // Transformer extra en JSON string
         $extraArray = $_POST['extra'] ?? [];
         $extraJSON = json_encode($extraArray);
+
+        // Calcul du niveau du mot de passe
+        $passwordValue = $extraArray['password'] ?? $extraArray['motdepasse'] ?? $extraArray['mdp'] ?? null;
+        $level = null;
+        if ($passwordValue) {
+            $service = new PasswordStrengthService();
+            $scoreData = $service->calculateScore($passwordValue);
+            $level = $scoreData['level'];
+        }
 
         // données pour validation
         $toValidate = [
@@ -143,7 +160,6 @@ class PasswordController extends Controller
             "extra" => $extraJSON
         ];
 
-        // Validation
         $validated = Validator::make($toValidate, [
             'type_id' => 'required|number',
             'label' => 'required|string|max:255',
@@ -156,15 +172,14 @@ class PasswordController extends Controller
             exit();
         }
 
-
         $data = [
             'type_id' => $_POST['password_type_id'],
             'label' => $_POST['label'],
             'extra' => EncryptionService::encrypt($extraJSON),
+            'level' => $level,
         ];
 
         $this->passwordRepository->update($id, $data);
-
 
         if (!empty($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
             $fileInfo = \App\Services\FileService::upload($_FILES['file']);
@@ -185,7 +200,6 @@ class PasswordController extends Controller
         header('Location: ' . url('/projects/' . $project_id . '/show'));
         exit();
     }
-
 
     public function destroy($project_id, $id)
     {

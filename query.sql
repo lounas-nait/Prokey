@@ -69,4 +69,54 @@ CREATE TABLE files (
 
 
 INSERT INTO `users` (`id`, `email`, `password`, `name`) VALUES
-(1, 'admin@test.com', '$2y$10$MrgKzApkZYJNbgWzTTHgXOYLFCefeyP7xhpAnXDyaLoxLfmwSfUTa', 'Admin');
+(1, 'admin@test.com', '$2y$10$MrgKzApkZYJNbgWzTTHgXOYLFCefeyP7xhpAnXDyaLoxLfmwSfUTa', 'Admin'),
+(2, 'admin00@test.com', '$2y$10$XtiGq9X1xgXATyZVRdXUY.Sux52Q4F0atLaxNnBeYZlmKunuEoR4m', 'Admin00');
+
+
+INSERT INTO password_types (id, label, color)
+VALUES
+(1, 'SSH Key', '#9b59b6'),
+(2, 'Certificat', '#e67e22'),
+(3, 'Fichier TXT', '#3498db');
+
+
+-- Champs pour Mot de passe
+INSERT INTO password_type_fields (password_type_id, label, field_name)
+VALUES
+(2, 'Login', 'login'),
+(2, 'Mot de passe', 'password');
+
+-- Champs pour SSH Key
+INSERT INTO password_type_fields (password_type_id, label, field_name)
+VALUES
+(1, 'Nom de la clé', 'key_name'),
+(1, 'Clé privée', 'private_key');
+
+-- Champs pour Certificat
+INSERT INTO password_type_fields (password_type_id, label, field_name)
+VALUES
+(3, 'Nom du certificat', 'cert_name'),
+(3, 'Clé privée', 'private_key');
+
+
+-- Champs pour SSH Key
+INSERT INTO password_type_fields (type_id, field_name, field_label, field_type, sort_order)
+VALUES
+(1, 'key_name', 'Nom de la clé', 'text', 1),
+(1, 'private_key', 'Clé privée', 'text', 2);
+
+-- Champs pour Certificat
+INSERT INTO password_type_fields (type_id, field_name, field_label, field_type, sort_order)
+VALUES
+(2, 'cert_name', 'Nom du certificat', 'text', 1),
+(2, 'private_key', 'Clé privée', 'text', 2);
+
+-- Champs pour Fichier TXT
+INSERT INTO password_type_fields (type_id, field_name, field_label, field_type, sort_order)
+VALUES
+(3, 'file_name', 'Nom du fichier', 'text', 1),
+(3, 'file_content', 'Contenu du fichier', 'textarea', 2);
+
+
+
+ALTER TABLE passwords ADD level VARCHAR(20) NULL;
