@@ -20,7 +20,7 @@ class PasswordController extends Controller
     }
 
     public function create($project_id)
-    {       
+    {
         $passwordTypeRepo = new PasswordTypeRepository();
         $password_types = $passwordTypeRepo->getAll();
 
@@ -32,19 +32,21 @@ class PasswordController extends Controller
             $fields = $passwordTypeFieldRepo->getFieldsByType($selected_type);
         }
 
-        $this->view('password/create', [
-             'title' => 'Ajouter un mot de passe',
-             'project_id' => $project_id,
-             'selected_type' => $selected_type,
-             'password_types' => $password_types,
-             'fields' => $fields,
+        $this->view(
+            'password/create',
+            [
+                'title' => 'Ajouter un mot de passe',
+                'project_id' => $project_id,
+                'selected_type' => $selected_type,
+                'password_types' => $password_types,
+                'fields' => $fields,
             ]
         );
     }
 
     public function store()
-    {   
-        
+    {
+
         $validated = Validator::make($_POST, [
             'project_id' => 'required|number',
             'password_type_id' => 'required|number',
@@ -67,10 +69,27 @@ class PasswordController extends Controller
             'project_id' => $_POST['project_id'],
             'type_id' => $_POST['password_type_id'],
             'label' => $_POST['label'],
-            'extra' => $extraEncrypted, 
+            'extra' => $extraEncrypted,
         ];
 
-        $this->passwordRepository->create($data);
+        $passwordId = $this->passwordRepository->create($data);
+
+        // --- Upload du fichier ---
+        if (!empty($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+            $fileInfo = \App\Services\FileService::upload($_FILES['file']);
+
+            if ($fileInfo) {
+                $fileRepository = new \App\Repositories\FileRepository();
+                $fileRepository->create([
+                    'password_id' => $passwordId,
+                    'filename'    => $fileInfo['filename'],
+                    'stored_name' => $fileInfo['stored_name'],
+                    'mime_type'   => $fileInfo['mime_type'],
+                    'size'        => $fileInfo['size'],
+                    'encrypted'   => 0
+                ]);
+            }
+        }
 
         header('Location: ' . url('/projects/' . $_POST['project_id'] . '/show'));
         exit();
@@ -81,7 +100,7 @@ class PasswordController extends Controller
         $password = $this->passwordRepository->getById($id);
         if (!$password) {
             $this->view('errors/404', ['title' => 'Mot de passe non trouvé']);
-            return; 
+            return;
         }
 
         $passwordTypeRepo = new PasswordTypeRepository();
@@ -92,35 +111,41 @@ class PasswordController extends Controller
 
         $extra = json_decode($password['extra'], true) ?? [];
 
-        $this->view('password/edit', [
-             'title' => 'Editer le mot de passe',
-             'project_id' => $project_id,
-             'password' => $password,
-             'password_types' => $password_types,
-             'fields' => $fields,
-             'extra' => $extra,
+        $this->view(
+            'password/edit',
+            [
+                'title' => 'Editer le mot de passe',
+                'project_id' => $project_id,
+                'password' => $password,
+                'password_types' => $password_types,
+                'fields' => $fields,
+                'extra' => $extra,
             ]
         );
     }
-    
+
     public function update($project_id, $id)
     {
         $password = $this->passwordRepository->getById($id);
         if (!$password) {
             $this->view('errors/404', ['title' => 'Mot de passe non trouvé']);
-            return; 
+            return;
         }
 
-        $extra = $_POST['extra'] ?? []; 
+        // Transformer extra en JSON string
+        $extraArray = $_POST['extra'] ?? [];
+        $extraJSON = json_encode($extraArray);
 
-        $data = [
-            'type_id' => $_POST['password_type_id'],
-            'label' => $_POST['label'],
-            'extra' => json_encode($extra),
+        // données pour validation
+        $toValidate = [
+            "type_id" => $_POST["password_type_id"],
+            "label" => $_POST["label"],
+            "extra" => $extraJSON
         ];
 
-        $validated = Validator::make($_POST, [
-            'type_id' => 'reequired|number',
+        // Validation
+        $validated = Validator::make($toValidate, [
+            'type_id' => 'required|number',
             'label' => 'required|string|max:255',
             'extra' => 'required|string'
         ]);
@@ -131,18 +156,43 @@ class PasswordController extends Controller
             exit();
         }
 
+
+        $data = [
+            'type_id' => $_POST['password_type_id'],
+            'label' => $_POST['label'],
+            'extra' => EncryptionService::encrypt($extraJSON),
+        ];
+
         $this->passwordRepository->update($id, $data);
+
+
+        if (!empty($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+            $fileInfo = \App\Services\FileService::upload($_FILES['file']);
+
+            if ($fileInfo) {
+                $fileRepository = new \App\Repositories\FileRepository();
+                $fileRepository->create([
+                    'password_id' => $id,
+                    'filename'    => $fileInfo['filename'],
+                    'stored_name' => $fileInfo['stored_name'],
+                    'mime_type'   => $fileInfo['mime_type'],
+                    'size'        => $fileInfo['size'],
+                    'encrypted'   => 0
+                ]);
+            }
+        }
 
         header('Location: ' . url('/projects/' . $project_id . '/show'));
         exit();
     }
+
 
     public function destroy($project_id, $id)
     {
         $password = $this->passwordRepository->getById($id);
         if (!$password) {
             $this->view('errors/404', ['title' => 'Mot de passe non trouvé']);
-            return; 
+            return;
         }
 
         $this->passwordRepository->delete($id);
@@ -150,5 +200,4 @@ class PasswordController extends Controller
         header('Location: ' . url('/projects/' . $project_id . '/show'));
         exit();
     }
-
 }

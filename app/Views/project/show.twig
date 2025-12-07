@@ -9,6 +9,7 @@
 
 <h3>Mots de passe du projet</h3>
 
+<!-- Lien pour ajouter un nouveau mot de passe -->
 <a href="{{ url('/projects/' ~ project_id ~ '/passwords/create') }}">
     Ajouter un nouveau mot de passe
 </a>
@@ -21,6 +22,7 @@
         <th>Type</th>
         <th>Label</th>
         <th>Champs</th>
+        <th>Fichiers</th>
         <th>Action</th>
     </tr>
 
@@ -29,18 +31,19 @@
         <td>{{ p.type_label }}</td>
         <td>{{ p.label }}</td>
 
+        <!-- Affichage des champs du mot de passe -->
         <td>
             {% for key, value in p.extra %}
                 <div class="field-line">
-                <div>
-                <strong>{{ key }}</strong> : 
+                    <div>
+                        <strong>{{ key }}</strong> :
                 <span class="hidden-value" style="display:none">
                 {{value}}
                 </span>
                 <span class="hidden-mask">
                     **********
                 </span>
-                </div>
+                    </div>
 
                 <button type="button"
                         class="toggle-btn"
@@ -59,6 +62,25 @@
             {% endfor %}
         </td>
 
+        <!-- Affichage des fichiers associés au mot de passe -->
+        <td>
+            <h4>Fichiers :</h4>
+            {% if p.files is empty %}
+                <p>Aucun fichier</p>
+            {% else %}
+                <ul>
+                {% for file in p.files %}
+                    <li>
+                        {{ file.filename }} ({{ file.size }} octets)
+                        <a href="{{ url('/files/' ~ file.id ~ '/download') }}">Télécharger</a>
+                        <a href="{{ url('/files/' ~ file.id ~ '/delete') }}" onclick="return confirm('Supprimer ce fichier ?')">Supprimer</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </td>
+
+        <!-- Actions pour le mot de passe -->
         <td>
             <a href="{{ url('/projects/' ~ project_id ~ '/passwords/' ~ p.id ~ '/edit') }}">Modifier</a>
 

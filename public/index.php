@@ -10,4 +10,7 @@ require_once __DIR__ . '/../app/helpers.php';
 
 $router = new App\Core\Router();
 require_once __DIR__ . '/../config/routes.php';
-$router->dispatch(); 
+
+$router->get('/files/{id}/download', 'FileController@download');
+$router->get('/files/{id}/delete', 'FileController@delete');
+$router->dispatch();

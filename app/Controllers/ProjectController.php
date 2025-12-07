@@ -17,22 +17,22 @@ class ProjectController extends Controller
         $this->projectRepository = new ProjectRepository();
     }
 
-   public function index()
-{
-   
-    $projects = $this->projectRepository->getAllByUser($_SESSION['user']['id']);
+    public function index()
+    {
 
-    $this->view('project/index', ['projects' => $projects]);
-}
+        $projects = $this->projectRepository->getAllByUser($_SESSION['user']['id']);
+
+        $this->view('project/index', ['projects' => $projects]);
+    }
 
 
     public function create()
-    {   
+    {
         $this->view('project/create', ['title' => 'Créer un projet']);
     }
 
     public function store()
-    {   
+    {
         $validated = Validator::make($_POST, [
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000'
@@ -45,8 +45,8 @@ class ProjectController extends Controller
         }
 
         $data = $_POST;
-$data['user_id'] = $_SESSION['user']['id'];
-$this->projectRepository->create($data);
+        $data['user_id'] = $_SESSION['user']['id'];
+        $this->projectRepository->create($data);
 
         header('Location: ' . url('/projects'));
         exit();
@@ -56,16 +56,22 @@ $this->projectRepository->create($data);
     {
         $project = $this->projectRepository->getById($id);
 
-        if(!$project) {
+        if (!$project) {
             return $this->view('errors/404', ['title' => 'Projet non trouvé']);
         }
 
         $passwordRepository = new PasswordRepository();
         $passwords = $passwordRepository->allByProjectId($id);
 
+        $fileRepository = new \App\Repositories\FileRepository();
+
+        foreach ($passwords as &$p) {
+            $p['files'] = $fileRepository->allByPassword($p['id']);
+        }
+
         $this->view('project/show', [
-            'title'=> $project['name'], 
-            'project_id'=> $project['id'], 
+            'title' => $project['name'],
+            'project_id' => $project['id'],
             'project' => $project,
             'passwords' => $passwords,
         ]);
@@ -75,12 +81,12 @@ $this->projectRepository->create($data);
     {
         $project = $this->projectRepository->getById($id);
 
-        if(!$project) {
+        if (!$project) {
             return $this->view('errors/404', ['title' => 'Projet non trouvé']);
         }
 
         $this->view('project/edit', [
-            'title'=> 'Éditer le projet', 
+            'title' => 'Éditer le projet',
             'project' => $project
         ]);
     }
@@ -111,6 +117,4 @@ $this->projectRepository->create($data);
         header('Location: ' . url('/projects'));
         exit();
     }
-
-
 }

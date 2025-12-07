@@ -16,6 +16,8 @@
           <th class="py-3 px-4">Nom du projet</th>
           <th class="py-3 px-4">Description</th>
           <th class="py-3 px-4">Date de création</th>
+          <th>Actions</th>
+
         </tr>
       </thead>
       <tbody>
@@ -25,6 +27,13 @@
             <td class="py-2 px-4 font-semibold">{{ project.name }}</td>
             <td class="py-2 px-4">{{ project.description }}</td>
             <td class="py-2 px-4 text-gray-500">{{ project.created_at | date('d/m/Y') }}</td>
+            <td class="py-2 px-4">
+              <!-- Lien pour ajouter un mot de passe -->
+              <a href="{{ url('/projects/' ~ project.id ~ '/passwords/create') }}"
+                 class="text-blue-600 hover:underline">
+                 Ajouter un mot de passe
+              </a>
+            </td>
           </tr>
         {% else %}
           <tr>

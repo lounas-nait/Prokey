@@ -8,6 +8,7 @@
 
   <form method="POST" 
         action="{{ url('/projects/' ~ project_id ~ '/passwords/' ~ password.id ~ '/update') }}"
+        enctype="multipart/form-data"
         class="bg-white p-6 rounded-lg shadow-md space-y-5">
 
     <!-- Libellé -->
@@ -61,7 +62,10 @@
         {% endif %}
       </div>
     {% endfor %}
-
+    <div class="form-group mt-3">
+    <label for="file">Ajouter un fichier :</label>
+    <input type="file" name="file" id="file" class="form-control">
+</div>
     <div class="pt-4">
       <button type="submit"
               class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">

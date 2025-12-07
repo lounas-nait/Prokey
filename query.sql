@@ -50,5 +50,23 @@ CREATE TABLE passwords (
     FOREIGN KEY (type_id) REFERENCES password_types(id)
 );
 
+
+
+CREATE TABLE files (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    password_id INT NOT NULL,
+
+    filename VARCHAR(255) NOT NULL,    
+    stored_name VARCHAR(255) NOT NULL, 
+    mime_type VARCHAR(255) NOT NULL,
+    size INT NOT NULL,
+    encrypted TINYINT DEFAULT 0,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (password_id) REFERENCES passwords(id) ON DELETE CASCADE
+);
+
+
 INSERT INTO `users` (`id`, `email`, `password`, `name`) VALUES
 (1, 'admin@test.com', '$2y$10$MrgKzApkZYJNbgWzTTHgXOYLFCefeyP7xhpAnXDyaLoxLfmwSfUTa', 'Admin');

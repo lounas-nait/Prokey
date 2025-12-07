@@ -23,7 +23,7 @@
 
   {% if selected_type %}
     <!-- Formulaire d'ajout de mot de passe -->
-    <form action="{{ url('/projects/' ~ project_id ~ '/passwords') }}" method="POST"
+    <form action="{{ url('/projects/' ~ project_id ~ '/passwords') }}" method="POST" enctype="multipart/form-data"
           class="bg-white p-6 rounded-lg shadow-md space-y-5">
       <input type="hidden" name="project_id" value="{{ project_id }}">
       <input type="hidden" name="password_type_id" value="{{ selected_type }}">
@@ -54,6 +54,10 @@
           {% endif %}
         </div>
       {% endfor %}
+      <div class="form-group mt-3">
+    <label for="file">Ajouter un fichier :</label>
+    <input type="file" name="file" id="file" class="form-control">
+</div>
 
       <div class="pt-4">
         <button type="submit"
